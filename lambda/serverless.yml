@@ -1,0 +1,31 @@
+service: growth-estimate-api
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: ap-southeast-2
+  memorySize: 540
+
+plugins:
+  - serverless-python-requirements
+
+package:
+  individually: false
+
+custom:
+  pythonRequirements:
+    usePipenv: true
+    dockerizePip: false
+    slim: true
+    zip: true
+
+functions:
+  calculate-estimate:
+    handler: main.lambda_handler
+    events:
+      - http:
+          path: growth_estimate
+          method: post
+          cors:
+            origin: '*'
