@@ -5,6 +5,7 @@ except ImportError:
 
 import json
 import pandas as pd
+import numpy as np
 import statsmodels.formula.api as smf
 import requests
 from urllib3.exceptions import HTTPError
@@ -63,7 +64,7 @@ def estimate_growth_with_ols(data, data_field):
     return ols_result, df
 
 
-def main(ticker="AU:YOW"):
+def main(ticker):
     try:
         # get data from api (or read from local for dev)
         # response_data = read_test_data()
@@ -106,7 +107,10 @@ def main(ticker="AU:YOW"):
 
         ratios_df = pd.DataFrame()
         for f in fields_list:
-            ratios_df[f] = df_dict[f]["value"]
+            if df_dict[f].empty:
+                ratios_df[f] = np.nan
+            else:
+                ratios_df[f] = df_dict[f]["value"]
 
         ratios_df["asset_turnover"] = ratios_df["total_rev"] / ratios_df["total_assets"]
         ratios_df["np_margin"] = ratios_df["ni"] / ratios_df["total_rev"]
@@ -121,8 +125,8 @@ def main(ticker="AU:YOW"):
             "growth_analytics": growth_result,
             "other_analytics": ratios_df.to_dict(),
         }
-    except Exception as e:
-        return {"Error Message": str(e)}
+    except Exception:
+        raise
 
 
 def lambda_handler(event, context):
