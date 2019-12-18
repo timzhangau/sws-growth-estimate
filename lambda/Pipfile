@@ -4,10 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-matplotlib = "*"
+#matplotlib = "*"
+# use layer for lambda deployment
+pandas = "==0.25.0"
+requests = "==2.22.0"
 
 [packages]
-pandas = "*"
 statsmodels = "*"
 
 [requires]
