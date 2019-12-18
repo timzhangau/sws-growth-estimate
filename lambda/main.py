@@ -1,3 +1,8 @@
+try:
+    import unzip_requirements
+except ImportError:
+    pass
+
 import json
 import pandas as pd
 import statsmodels.formula.api as smf

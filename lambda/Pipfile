@@ -6,11 +6,13 @@ verify_ssl = true
 [dev-packages]
 #matplotlib = "*"
 # use layer for lambda deployment
-pandas = "==0.25.0"
-requests = "==2.22.0"
+#pandas = "==0.25.0"
+#requests = "==2.22.0"
 
 [packages]
 statsmodels = "*"
+pandas = ">=0.25.0"
+requests = ">=2.22.0"
 
 [requires]
 python_version = "3.7"

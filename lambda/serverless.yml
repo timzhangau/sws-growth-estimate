@@ -5,7 +5,7 @@ provider:
   runtime: python3.7
   stage: dev
   region: ap-southeast-2
-  memorySize: 1000
+  memorySize: 2000
 
 plugins:
   - serverless-python-requirements
@@ -16,17 +16,17 @@ package:
 custom:
   pythonRequirements:
     usePipenv: true
-    dockerizePip: false
+    dockerizePip: non-linux
     slim: true
     zip: true
-    layer: true
+    #    layer: true
 
 functions:
   calculate-estimate:
     handler: main.lambda_handler
-    layers:
-      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-pandas:1
-      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-requests:8
+    #    layers:
+    #      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-pandas:10
+    #      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-requests:10
     events:
       - http:
           path: growth_estimate
