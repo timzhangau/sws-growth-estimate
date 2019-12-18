@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import statsmodels.formula.api as smf
+import requests
+from urllib3.exceptions import HTTPError
 
 # import matplotlib.pyplot as plt
 # import statsmodels.api as sm
@@ -13,6 +15,17 @@ def read_test_data():
     with open(file_path, "r") as f:
         data = json.load(f)
     return data
+
+
+def get_data_by_ticker(ticker):
+    headers = {"Accept": "application/vnd.simplywallst.v2"}
+    url = f"https://simplywall.st/api/company/{ticker}?include=analysis.extended.raw_data&version=2.0"
+
+    r = requests.get(url, headers=headers)
+    if r.status_code == 200:
+        return r.json()
+    else:
+        raise HTTPError("Unable to get data from SWS")
 
 
 def get_raw_data_by_key(data, key):
@@ -45,10 +58,11 @@ def estimate_growth_with_ols(data, data_field):
     return ols_result, df
 
 
-def main():
+def main(ticker="AU:YOW"):
     try:
         # get data from api (or read from local for dev)
-        response_data = read_test_data()
+        # response_data = read_test_data()
+        response_data = get_data_by_ticker(ticker)
 
         # estimate growth with ols
         growth_result = {}
@@ -57,6 +71,9 @@ def main():
             growth_result[k]["ols"], growth_result[k]["df"] = estimate_growth_with_ols(
                 response_data, k
             )
+            # parse the result to return as json later
+            growth_result[k]["ols"] = vars(growth_result[k]["ols"])
+            growth_result[k]["df"] = growth_result[k]["df"].to_dict()
 
         # calculate some stats
         df_dict = {}
@@ -89,18 +106,24 @@ def main():
             ratios_df["total_assets"] / ratios_df["total_equity"]
         )
 
-        print("done")
-        return growth_result
+        return {
+            "growth_analytics": growth_result,
+            "other_analytics": ratios_df.to_dict(),
+        }
     except Exception as e:
-        print(e)
         return {"Error Message": str(e)}
 
 
 def lambda_handler(event, context):
-    print(event)
-    print(context)
-    return {"event": event, "context": context}
+    try:
+        request_body = json.loads(event["body"])
+        ticker = request_body["ticker"]
+        result = main(ticker)
+        return {"statusCode": 200, "body": json.dumps(result)}
+    except Exception as e:
+        return {"statusCode": 500, "body": e}
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    test = main()
+    print(test)
