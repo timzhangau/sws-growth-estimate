@@ -77,7 +77,13 @@ def main(ticker="AU:YOW"):
                 response_data, k
             )
             # parse the result to return as json later
-            growth_result[k]["ols"] = vars(growth_result[k]["ols"])
+            growth_result[k]["ols"] = {
+                "params": growth_result[k]["ols"].params.tolist(),
+                "pvalues": growth_result[k]["ols"].pvalues.tolist(),
+                "resid": growth_result[k]["ols"].resid.tolist(),
+                "rsquared": growth_result[k]["ols"].rsquared,
+                "rsquared_adj": growth_result[k]["ols"].rsquared_adj,
+            }
             growth_result[k]["df"] = growth_result[k]["df"].to_dict()
 
         # calculate some stats
@@ -129,6 +135,6 @@ def lambda_handler(event, context):
         return {"statusCode": 500, "body": e}
 
 
-if __name__ == "__main__":
-    test = main()
-    print(test)
+# if __name__ == "__main__":
+#     test = main()
+#     print(test)
