@@ -31,5 +31,4 @@ functions:
       - http:
           path: growth_estimate
           method: post
-          cors:
-            origin: '*'
+          cors: true

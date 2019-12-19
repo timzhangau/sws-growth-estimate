@@ -134,9 +134,17 @@ def lambda_handler(event, context):
         request_body = json.loads(event["body"])
         ticker = request_body["ticker"]
         result = main(ticker)
-        return {"statusCode": 200, "body": json.dumps(result)}
+        return {
+            "statusCode": 200,
+            "headers": {"Access-Control-Allow-Origin": "*"},
+            "body": json.dumps(result),
+        }
     except Exception as e:
-        return {"statusCode": 500, "body": e}
+        return {
+            "statusCode": 500,
+            "headers": {"Access-Control-Allow-Origin": "*"},
+            "body": e,
+        }
 
 
 # if __name__ == "__main__":
