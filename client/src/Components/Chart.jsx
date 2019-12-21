@@ -3,6 +3,19 @@ import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Line,
+  Area,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ReferenceDot
+} from "recharts";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,12 +27,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const initData = { name: "", growth_analytics: { total_rev: { df: "" } } };
+
 function Chart() {
   const classes = useStyles();
 
-  const [ticker, setTicker] = useState("");
-  const [query, setQuery] = useState("");
-  const [data, setData] = useState("");
+  const [ticker, setTicker] = useState("AIM:BBSN");
+  const [query, setQuery] = useState("AIM:BBSN");
+  const [data, setData] = useState(initData);
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.post(
@@ -46,7 +61,54 @@ function Chart() {
       >
         Estimate Growth
       </Button>
-      <Typography>{data}</Typography>
+      <Typography>{data.name}</Typography>
+      <ResponsiveContainer width="100%" minHeight={500}>
+        <ComposedChart
+          width={500}
+          height={400}
+          data={data.growth_analytics.total_rev.df}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20
+          }}
+        >
+          <CartesianGrid stroke="#f5f5f5" />
+          <XAxis dataKey="label" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Area
+            name="Actual Revenue"
+            type="monotone"
+            dataKey="value"
+            fill="#8884d8"
+            stroke="#8884d8"
+          />
+          <Line
+            name="Predicted Revenue"
+            type="monotone"
+            dataKey="prediction"
+            stroke="#ff7300"
+            dot={false}
+          />
+          <Line
+            name="Industry Average"
+            type="monotone"
+            dataKey="industry_avg"
+            stroke="#7deb2f"
+            dot={false}
+          />
+          <Line
+            name="Market Average"
+            type="monotone"
+            dataKey="market_avg"
+            stroke="#0518a6"
+            dot={false}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   );
 }
