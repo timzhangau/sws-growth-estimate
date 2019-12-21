@@ -99,6 +99,10 @@ def project_with_industry_averages(df, rate):
             tmp_df.loc[index, "projected"] = last_value
         else:
             last_value = row["value"]
+    tmp_df.loc[tmp_df["latest"].isnull(), "latest"] = False
+    latest_value = tmp_df.loc[tmp_df["latest"], "value"].values[0]
+    latest_period = tmp_df.loc[tmp_df["latest"], "period"].values[0]
+    tmp_df.loc[tmp_df["period"] == latest_period, "projected"] = latest_value
     return tmp_df["projected"]
 
 
@@ -182,6 +186,7 @@ def main(ticker):
             growth_result[k]["df"] = growth_result[k]["df"].to_dict(orient="records")
 
         return {
+            "name": response_data["data"]["name"],
             "growth_analytics": growth_result,
             # "other_analytics": calculate_additional_stats(response_data).to_dict(
             #     orient="records"
