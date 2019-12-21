@@ -176,6 +176,9 @@ def main(ticker):
                 growth_result[k]["df"]["market_avg"] = project_with_industry_averages(
                     growth_result[k]["df"], market_average
                 )
+            growth_result[k]["df"] = growth_result[k]["df"].where(
+                (pd.notnull(growth_result[k]["df"])), None
+            )
             growth_result[k]["df"] = growth_result[k]["df"].to_dict(orient="records")
 
         return {
