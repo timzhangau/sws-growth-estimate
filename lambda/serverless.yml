@@ -9,6 +9,7 @@ provider:
 
 plugins:
   - serverless-python-requirements
+  - serverless-plugin-warmup
 
 package:
   individually: false
@@ -20,10 +21,16 @@ custom:
     slim: true
     zip: true
     #    layer: true
+  warmup:
+    enabled: true
+    events:
+      - schedule: rate(5 minutes)
+
 
 functions:
   calculate-estimate:
     handler: main.lambda_handler
+    warmup: true
     #    layers:
     #      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-pandas:10
     #      - arn:aws:lambda:ap-southeast-2:113088814899:layer:Klayers-python37-requests:10
