@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -8,13 +8,11 @@ import {
   ComposedChart,
   Line,
   Area,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ReferenceDot
+  Legend
 } from "recharts";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -61,7 +59,7 @@ function Chart() {
       >
         Estimate Growth
       </Button>
-      <Typography>{data.name}</Typography>
+      <Typography variant="h6">{data.name}</Typography>
       <ResponsiveContainer width="100%" minHeight={500}>
         <ComposedChart
           width={500}

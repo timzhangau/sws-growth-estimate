@@ -6,10 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { Paper } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import blue from "@material-ui/core/colors/blue";
 import { makeStyles } from "@material-ui/core/styles";
 
-import logo from "./logo.svg";
 import "./App.css";
 import Chart from "./Components/Chart";
 
@@ -59,6 +57,9 @@ function App() {
                 calculation of historical earnings growth could be misleading if
                 the starting data point is negative. Any fundamental
                 decomposition with negative earnings is not meaningful either.
+                The management forecast is not always available and it requires
+                the natural language process to extract the information on a
+                large scale.
                 <br />
                 <br />
                 To estimate growth potential of loss making companies, we have
@@ -77,8 +78,8 @@ function App() {
                 <br />I use the raw revenue data from CIQ. This data point is
                 the revenue for the last twelve months and available every
                 quarter. Looking at some sample data, most of the history is
-                back to 2013, with about 6 years data. As this time period is
-                not long enough to be impacted by the structural changes in
+                back to 2013, with about 6 years data. As the length of period
+                is not long enough to be impacted by the structural changes in
                 general, all the available data points will be included to find
                 the line of best fit. The quarterly frequency also helps to
                 smooth out the result.
@@ -97,11 +98,11 @@ function App() {
                 <br />
                 <br />
                 To improve the estimate result, we could look further into the
-                drivers of the revenue if data points are available. For
-                example, trying to forecast the number of subscribers for
+                drivers of the revenue if additional data points are available.
+                For example, trying to forecast the number of subscribers for
                 companies with paid subscription pricing model. We could also
-                include the cost related data points to provide some insight on
-                the net income for loss making companies.
+                include the cost related data points in combination to provide
+                some insight on the net income for loss making companies.
               </Typography>
             </Paper>
           </Grid>
@@ -113,9 +114,32 @@ function App() {
           <Grid item xs={12}>
             <Paper className={classes.textBlock}>
               <Typography variant="h4" align="left" gutterBottom>
-                Notes
+                Notes to Investors
               </Typography>
-              <Typography variant="h6" align="left" gutterBottom></Typography>
+              <Typography variant="h6" align="left" gutterBottom>
+                When the company has negative earnings, the regular calculated
+                earnings growth rate can be misleading. Say Company Unicorn lost
+                $10mil 1 year ago, but its product made a big progress in the
+                last 12 months and it finally broke even this year. The
+                traditional growth rate calculation would give you -100%.
+                <br />
+                <br />
+                ($0 - (-$10 mil)) / ( -$10 mil) = -100%
+                <br />
+                <br />
+                That's not right. We have an earnings improvement, but the
+                formula tells you a different story.
+                <br />
+                <br />
+                Greater challenge is posed to loss making companies with no
+                analyst coverage. But we can still find valuable information
+                about the company growth potential using linear regression
+                model. The line of best fit is plotted against the historical
+                revenue data and then projected to the future. The slope of the
+                line represents the change of revenue for each period. This can
+                be compared to the industry and market average revenue growth.
+                The steeper of the line, the higher the growth rate.
+              </Typography>
             </Paper>
           </Grid>
         </Container>
